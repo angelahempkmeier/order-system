@@ -73,3 +73,9 @@ Resposta esperada:
 }
 ```
 Status esperado: `200 OK`
+
+## Melhorias
+- Adicionar validações de pedidos;
+- Adicionar usuários a pedidos;
+- Cancelamento de pedidos;
+- Etc.
