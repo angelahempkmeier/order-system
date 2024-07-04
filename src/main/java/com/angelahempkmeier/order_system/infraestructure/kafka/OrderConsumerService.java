@@ -1,5 +1,6 @@
-package com.angelahempkmeier.order_system.application.service;
+package com.angelahempkmeier.order_system.infraestructure.kafka;
 
+import com.angelahempkmeier.order_system.application.service.OrderService;
 import com.angelahempkmeier.order_system.domain.model.Order;
 import com.angelahempkmeier.order_system.domain.model.OrderStatus;
 import org.slf4j.Logger;
