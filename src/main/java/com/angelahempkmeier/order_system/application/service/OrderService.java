@@ -1,5 +1,8 @@
 package com.angelahempkmeier.order_system.application.service;
 
+import com.angelahempkmeier.order_system.application.dtos.OrderRequestDTO;
+import com.angelahempkmeier.order_system.application.dtos.OrderResponseDTO;
+import com.angelahempkmeier.order_system.application.exception.OrderNotFoundException;
 import com.angelahempkmeier.order_system.domain.model.Order;
 import com.angelahempkmeier.order_system.domain.model.OrderStatus;
 import com.angelahempkmeier.order_system.infraestructure.repository.OrderRepository;
@@ -20,22 +23,25 @@ public class OrderService {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public Order createOrder(Order order){
+    public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO){
+        Order order = new Order(orderRequestDTO.product(), orderRequestDTO.quantity());
         order.setStatus(OrderStatus.AGUARDANDO_ENVIO);
         Order savedOrder = repository.save(order);
         logger.info("Order created: {}", savedOrder);
         kafkaTemplate.send("orders", savedOrder);
         logger.info("Message sent for Kafka: {}", savedOrder);
-        return savedOrder;
+        return OrderResponseDTO.from(order);
     }
 
-    public Order getById(String id){
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found."));
+    public OrderResponseDTO getById(String id){
+        Order order = repository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id));
+        return OrderResponseDTO.from(order);
     }
 
     public void updateOrderStatus(String id, OrderStatus status) {
-        Order order = getById(id);
+        Order order = repository.findById(id)
+                .orElseThrow(() -> new OrderNotFoundException(id.toString()));
         order.setStatus(status);
         repository.save(order);
     }
