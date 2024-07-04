@@ -7,16 +7,15 @@ Este projeto implementa um sistema de pedidos assíncrono utilizando Spring Boot
 Neste projeto foi realizada a implementação da Arquitetura Hexagonal, em que as principais camadas desenvolvidas foram:
 
 `Domain`: Define os modelos de domínio, como Order e OrderStatus.
-`Application`: Nela, tem-se os serviços responsáveis pela lógica de negócio, como OrderService, OrderProducerService e OrderConsumerService.
-`Infrastructure`: Nessa comada há a conexão com interfaces externas, como repositórios (OrderRepository para MongoDB) e configurações (MongoConfig).
-`Controller`: Camada responsável pela interface rest da aplicação.
+`Application`: Nessa camada adicionei os packages de controller (comunicação do usuário via REST com a aplicação), dtos (Request e Response), exception (personalização pra retornar erros mais amigáveis ao usuário) e service (cuida da lógica de negócio e comunicação com Kafka. Pelo service se comunicar com aplicações externas, decidi colocá-lo na camada de service, mas acredito que dependendo do cenário seria ideal estar na camada de Domain).
+`Infrastructure`: Nessa comada há a conexão com interfaces externas, como repositórios (OrderRepository para MongoDB), configurações (MongoConfig) e interação com o Kafka (OrderProducerService e OrderConsumerService).
 
 ## Funcionalidades:
 O sistema permite:
 
-- Criação de novos pedidos via REST através do endpoint POST `/orders`.
-- Consulta do status de um pedido via REST através do endpoint POST `/orders`.
-- Processamento assíncrono dos pedidos utilizando Apache Kafka para comunicação entre componentes.
+- Criar novos pedidos via REST através do endpoint POST `/orders`.
+- Consultar status de um pedido via REST através do endpoint POST `/orders`.
+- Processamento assíncrono dos pedidos utilizando Apache Kafka para comunicação entre componentes, ou seja, ao criar um novo pedido, o sistema se comunica com o Kafka e consegue atualizar as informações de status do pedido, simulando a comunicação com a transporadora.
 
 ## Tecnologias Utilizadas
 - Spring Boot
@@ -27,7 +26,7 @@ O sistema permite:
 
 ## Configuração
 ### Docker Compose
-Para facilitar o desenvolvimento e deixar disponível todas as ferramentas necessárias para a realização desse projeto, foi disponibilizar o docker-compose, em que as seguintes tecnologias foram configuradas:
+Para facilitar o desenvolvimento e deixar disponível todas as ferramentas necessárias para a realização desse projeto, foi disponibilizado o docker-compose, em que as seguintes tecnologias foram configuradas:
 - Zookeeper
 - Kafka
 - Schema Registry
@@ -54,7 +53,6 @@ docker-compose up
 Exemplo: 
 ```
 {
-	"id": "id-string-exemplo",
 	"product":"product 01",
 	"quantity":45
 }
@@ -62,11 +60,11 @@ Exemplo:
 Status esperado: `201 CREATED`
 `GET`: http://localhost:8080/orders/{id}
 Exemplo:
-`http://localhost:8080/orders/id-string-exemplo`
+`http://localhost:8080/orders/2024070416523`
 Resposta esperada:
 ```
 {
-	"id": "id-string-exemplo",
+	"id": "2024070416523",
 	"product": "product 01",
 	"quantity": 45,
 	"status": "ENVIADO_TRANSPORTADORA"
@@ -75,7 +73,11 @@ Resposta esperada:
 Status esperado: `200 OK`
 
 ## Melhorias
-- Adicionar validações de pedidos;
-- Adicionar usuários a pedidos;
-- Cancelamento de pedidos;
+Pensando na aplicação, acredito que seja bacana mapear alguns pontos de melhoria:
+- Testes de integração;
+- Entidade usuário responsável por pedidos;
+- Validação com autenticação para apenas usuários donos do pedido poderem visualizar as informações de atualização de status;
+- Pipeline CI/CD;
+- Documentação da api com swagger;
+- Cache pra não precisar ir ao banco pra procurar as informações do pedido;
 - Etc.
