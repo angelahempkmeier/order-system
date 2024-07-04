@@ -6,8 +6,8 @@ Este projeto implementa um sistema de pedidos assíncrono utilizando Spring Boot
 
 Neste projeto foi realizada a implementação da Arquitetura Hexagonal, em que as principais camadas desenvolvidas foram:
 
-`Domain`: Define os modelos de domínio, como Order e OrderStatus.
-`Application`: Nessa camada adicionei os packages de controller (comunicação do usuário via REST com a aplicação), dtos (Request e Response), exception (personalização pra retornar erros mais amigáveis ao usuário) e service (cuida da lógica de negócio e comunicação com Kafka. Pelo service se comunicar com aplicações externas, decidi colocá-lo na camada de service, mas acredito que dependendo do cenário seria ideal estar na camada de Domain).
+`Domain`: Define os modelos de domínio, como Order e OrderStatus.</br>
+`Application`: Nessa camada adicionei os packages de controller (comunicação do usuário via REST com a aplicação), dtos (Request e Response), exception (personalização pra retornar erros mais amigáveis ao usuário) e service (cuida da lógica de negócio e comunicação com Kafka. Pelo service se comunicar com aplicações externas, decidi colocá-lo na camada de service, mas acredito que dependendo do cenário seria ideal estar na camada de Domain).</br>
 `Infrastructure`: Nessa comada há a conexão com interfaces externas, como repositórios (OrderRepository para MongoDB), configurações (MongoConfig) e interação com o Kafka (OrderProducerService e OrderConsumerService).
 
 ## Funcionalidades:
