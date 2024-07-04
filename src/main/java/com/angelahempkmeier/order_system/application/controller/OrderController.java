@@ -1,5 +1,7 @@
-package com.angelahempkmeier.order_system.controller;
+package com.angelahempkmeier.order_system.application.controller;
 
+import com.angelahempkmeier.order_system.application.dtos.OrderRequestDTO;
+import com.angelahempkmeier.order_system.application.dtos.OrderResponseDTO;
 import com.angelahempkmeier.order_system.application.service.OrderService;
 import com.angelahempkmeier.order_system.domain.model.Order;
 import org.springframework.http.HttpStatus;
@@ -16,14 +18,14 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
+    public ResponseEntity<OrderResponseDTO> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
+        OrderResponseDTO createdOrder = orderService.createOrder(orderRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrder(@PathVariable String id) {
-        Order order = orderService.getById(id);
+    public ResponseEntity<OrderResponseDTO> getOrder(@PathVariable String id) {
+        OrderResponseDTO order = orderService.getById(id);
         return ResponseEntity.ok(order);
     }
 }
